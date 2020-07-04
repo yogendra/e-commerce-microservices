@@ -1,0 +1,43 @@
+services:
+  redis:
+    image: "redis:alpine"
+
+  eureka-server:
+    build: ./eureka-server
+    depends_on:
+      - redis
+
+  api-gateway:
+    build: ./api-gateway
+    depends_on:
+      - redis
+      - eureka-server
+
+  db:
+    build: ./db
+
+  #  order-service-db:
+  #   image: mcr.microsoft.com/mssql/server
+  #   env:
+  #     ACCEPT_EULA: Y
+  #     SA_PASSWORD:
+  # order-service:
+  #   build: ./order-service
+
+  # product-catalot-service:
+  #   build: ./product-catalot-service
+
+  # product-recommendation-service:
+  #   build: ./product-recommendation-service
+
+  user-service:
+    build: ./user-service
+    depends_op:
+      - redis
+      - eureka
+      - db
+    network:
+      - ecom
+
+networks:
+  - ecom
